@@ -27,12 +27,13 @@ function GetInfoOnCountry() {
       }
     }
   `;
-  const { loading, error, data } = useQuery(GET_INFO, {
+  const { loading, error, data, refetch } = useQuery(GET_INFO, {
     variables: { alpha2 },
+    pollInterval: 1000,
   });
 
   if (loading) return <p>Loading..</p>;
-  if (error) return <p>Error</p>;
+  if (error) return <p>Error {error.message}</p>;
   console.log(data.country.prediction);
   return (
     <>
@@ -59,6 +60,7 @@ function GetInfoOnCountry() {
           ))}
         </tbody>
       </table>
+      <button onClick={() => refetch()}>Click here to refresh</button>
     </>
   );
 }
