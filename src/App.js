@@ -3,7 +3,7 @@ import { ApolloClient, InMemoryCache, useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
 import { ApolloProvider } from "@apollo/client";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-
+import { DateTime } from "luxon";
 function GetInfoOnCountry() {
   const alpha2Context = useContext(AlphaContext);
   let alpha2 = useMemo(() => {
@@ -34,14 +34,16 @@ function GetInfoOnCountry() {
 
   if (loading) return <p>Loading..</p>;
   if (error) return <p>Error {error.message}</p>;
-  console.log(data.country.prediction);
   return (
     <>
       <p>Country code: {alpha2}</p>
       <p>Cases: {data.country.covid.cases}</p>
       <p>Recovered : {data.country.covid.recovered}</p>
       <p>Deaths: {data.country.covid.deaths}</p>
-      <p>Last update: {data.country.covid.last_update}</p>
+      <p>
+        Last update:{" "}
+        {DateTime.fromISO(data.country.covid.last_update).toLocaleString()}
+      </p>
       <table>
         <thead>
           <tr>
@@ -108,9 +110,8 @@ function App() {
     <div className="App">
       <ApolloProvider client={client}>
         <div>
-          <h2>My first Apollo app 🚀</h2>
           <GetCountries>
-            <GetInfoOnCountry alpha2={"PK"} />
+            <GetInfoOnCountry />
           </GetCountries>
         </div>
       </ApolloProvider>
